@@ -13,7 +13,10 @@ function method_get($reservations)
 
 }
 
-function method_post($input){
+function method_post($input,$reservations){
+
+    $reservations=$reservations;
+    $nextId= count($reservations);
 
     $room = $input['room'];
     $start = strtotime($input['start']);
@@ -32,8 +35,6 @@ function method_post($input){
     if ($start < $now) {
         respond(['error' => 'Reservation cannot be in the past'], 400);
     }
-
-    global $reservations, $nextId;
 
     // Päällekkäisyyden tarkistus
     foreach ($reservations as $r) {
@@ -55,15 +56,14 @@ function method_post($input){
     respond($reservation, 201);
 }
 
-function method_delete($uri){
-    
+function method_delete($uri,$reservations){
+    $reservations=$reservations;
     $id = (int)$uri;
-    global $reservations;
 
     foreach ($reservations as $index => $r) {
         if ($r['id'] === $id) {
             unset($reservations[$index]);
-            respond(['message' => 'Reservation deleted']);
+            respond(['message' => 'Reservation deleted'.$id]);
         }
     }
 

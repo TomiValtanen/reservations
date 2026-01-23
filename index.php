@@ -1,13 +1,14 @@
 <?php
+require ("headers_functions/headers.php");
 require ("functions/helper_functions.php");
 require ("http_functions/http_methods.php");
+
 /**
  * Kokoushuoneiden varaus API
  * - In-memory tietokanta (PHP array)
  * - Yksinkertainen REST-tyylinen rajapinta
  */
 
-header('Content-Type: application/json');
 
 // Aikavyöhyke lisätty
 date_default_timezone_set('Europe/Helsinki');
@@ -17,10 +18,26 @@ date_default_timezone_set('Europe/Helsinki');
  * In-memory "tietokanta"
  * Normaalisti tämä olisi esim. Redis tai SQLite :memory:
  */
-static $reservations = [];
-static $nextId = 1;
-
-
+static $reservations = [
+    [
+    "id"=> 0,
+    "room"=> "B203",
+    "start"=> 1769351400,
+    "end"=> 1769355000
+    ],
+    [
+    "id"=> 1,
+    "room"=> "B204",
+    "start"=> 1769351400,
+    "end"=> 1769355000
+    ],
+    [
+    "id"=> 2,
+    "room"=> "B205",
+    "start"=> 1769351400,
+    "end"=> 1769355000
+    ]
+];
 
 
 /**
@@ -56,7 +73,7 @@ if ($method === 'POST') {
         respond(['error' => 'Invalid payload'], 400);
     }
 
-    method_post($input);
+    method_post($input,$reservations);
 }
 
 /**
@@ -64,7 +81,7 @@ if ($method === 'POST') {
  * DELETE /reservations/{id}
  */
 if ($method === 'DELETE' && isset($uri[1])) {
-    method_delete($uri[1]);
+    method_delete($uri[1],$reservations);
 }
 
 respond(['error' => 'Method not allowed'], 405);
