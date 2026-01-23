@@ -1,4 +1,6 @@
 <?php
+require ("functions/helper_functions.php");
+require ("http_functions/http_methods.php");
 /**
  * Kokoushuoneiden varaus API
  * - In-memory tietokanta (PHP array)
@@ -18,21 +20,8 @@ date_default_timezone_set('Europe/Helsinki');
 static $reservations = [];
 static $nextId = 1;
 
-/**
- * Apufunktio: palauta JSON-vastaus ja lopeta suoritus
- */
-function respond($data, int $statusCode = 200): void {
-    http_response_code($statusCode);
-    echo json_encode($data);
-    exit;
-}
 
-/**
- * Tarkistaa menevätkö kaksi aikaväliä päällekkäin
- */
-function overlaps($start1, $end1, $start2, $end2): bool {
-    return $start1 < $end2 && $end1 > $start2;
-}
+
 
 /**
  * Reititys
@@ -53,14 +42,7 @@ if ($method === 'GET') {
         respond(['error' => 'room parameter missing'], 400);
     }
 
-    $room = $_GET['room'];
-    global $reservations;
-
-    $result = array_values(array_filter($reservations, function ($r) use ($room) {
-        return $r['room'] === $room;
-    }));
-
-    respond($result);
+    method_get($reservations);
 }
 
 /**
@@ -74,44 +56,7 @@ if ($method === 'POST') {
         respond(['error' => 'Invalid payload'], 400);
     }
 
-    $room = $input['room'];
-    $start = strtotime($input['start']);
-    $end = strtotime($input['end']);
-    $now = time();
-
-    // Business rules
-    if ($start === false || $end === false) {
-        respond(['error' => 'Invalid datetime format'], 400);
-    }
-
-    if ($start >= $end) {
-        respond(['error' => 'Start time must be before end time'], 400);
-    }
-
-    if ($start < $now) {
-        respond(['error' => 'Reservation cannot be in the past'], 400);
-    }
-
-    global $reservations, $nextId;
-
-    // Päällekkäisyyden tarkistus
-    foreach ($reservations as $r) {
-        if ($r['room'] === $room && overlaps($start, $end, $r['start'], $r['end'])) {
-            respond(['error' => 'Time slot already reserved'], 409);
-        }
-    }
-
-    // Luo varaus
-    $reservation = [
-        'id' => $nextId++,
-        'room' => $room,
-        'start' => $start,
-        'end' => $end
-    ];
-
-    $reservations[] = $reservation;
-
-    respond($reservation, 201);
+    method_post($input);
 }
 
 /**
@@ -119,17 +64,7 @@ if ($method === 'POST') {
  * DELETE /reservations/{id}
  */
 if ($method === 'DELETE' && isset($uri[1])) {
-    $id = (int)$uri[1];
-    global $reservations;
-
-    foreach ($reservations as $index => $r) {
-        if ($r['id'] === $id) {
-            unset($reservations[$index]);
-            respond(['message' => 'Reservation deleted']);
-        }
-    }
-
-    respond(['error' => 'Reservation not found'], 404);
+    method_delete($uri[1]);
 }
 
 respond(['error' => 'Method not allowed'], 405);
