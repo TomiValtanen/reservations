@@ -69,9 +69,19 @@ if ($method === 'GET') {
 if ($method === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
 
-    if (!isset($input['room'], $input['start'], $input['end'])) {
+    if (!isset($input['room'], $input['start_time'], $input['end_time'], $input['date'])) {
         respond(['error' => 'Invalid payload'], 400);
     }
+
+    check_string($input['room'],"room");
+    check_string($input['date'],"date");
+    check_string($input['start_time'],"start_time");
+    check_string($input['end_time'],"end_time");
+
+    validate_format($input["date"],"Y-m-d","Invalid date format, expected Y-m-d");
+    validate_format($input["start_time"],"H:i","Invalid time format, expected H:i");
+    validate_format($input["end_time"],"H:i","Invalid time format, expected H:i");
+
 
     method_post($input,$reservations);
 }

@@ -19,8 +19,9 @@ function method_post($input,$reservations){
     $nextId= count($reservations);
 
     $room = $input['room'];
-    $start = strtotime($input['start']);
-    $end = strtotime($input['end']);
+    $date = $input["date"];
+    $start = strtotime($date . " " . $input['start_time']);
+    $end = strtotime($date . " " . $input['end_time']);
     $now = time();
 
     // Business rules
@@ -47,6 +48,7 @@ function method_post($input,$reservations){
     $reservation = [
         'id' => $nextId++,
         'room' => $room,
+        'date' => $date,
         'start' => $start,
         'end' => $end
     ];
