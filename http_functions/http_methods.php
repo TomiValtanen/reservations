@@ -9,6 +9,10 @@ function method_get($reservations)
         return $r['room'] === $room;
     }));
 
+    usort($result, function ($a, $b) {
+    return $a['start'] <=> $b['start'];
+    });
+
     respond($result);
 
 }
@@ -37,6 +41,10 @@ function method_post($input,$reservations){
         respond(['error' => 'Reservation cannot be in the past'], 400);
     }
 
+    if($input['start_time'] < "08:00" || $input['end_time']>"20:00"){
+        respond(['error' => 'The reservation must be made between office opening hours of 8:00 and 20:00'], 400);
+    }
+
     // Päällekkäisyyden tarkistus
     foreach ($reservations as $r) {
         if ($r['room'] === $room && overlaps($start, $end, $r['start'], $r['end'])) {
@@ -48,7 +56,6 @@ function method_post($input,$reservations){
     $reservation = [
         'id' => $nextId++,
         'room' => $room,
-        'date' => $date,
         'start' => $start,
         'end' => $end
     ];
@@ -58,14 +65,32 @@ function method_post($input,$reservations){
     respond($reservation, 201);
 }
 
-function method_delete($uri,$reservations){
+function method_delete($id,$reservations){
     $reservations=$reservations;
-    $id = (int)$uri;
+    $id = (int)$id;
+
+    if ($id < 0) {
+        respond(['error' => 'Invalid reservation id'], 400);
+    }
+
+    global $reservations;
 
     foreach ($reservations as $index => $r) {
         if ($r['id'] === $id) {
+            $deleted_reservation=$reservations[$index];
             unset($reservations[$index]);
-            respond(['message' => 'Reservation deleted'.$id]);
+            $reservations = array_values($reservations);
+
+            respond([[
+                    "message"=> "Reservation deleted",
+                    "reservation"=> 
+                    [
+                        "id"=> $deleted_reservation["id"],
+                        "room"=> $deleted_reservation["room"],
+                        "start"=> $deleted_reservation["start"],
+                        "end"=> $deleted_reservation["end"]
+                    ]
+                    ]]);
         }
     }
 

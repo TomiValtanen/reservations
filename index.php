@@ -1,5 +1,5 @@
 <?php
-require ("headers_functions/headers.php");
+require ("header_functions/headers.php");
 require ("functions/helper_functions.php");
 require ("http_functions/http_methods.php");
 
@@ -36,6 +36,30 @@ static $reservations = [
     "room"=> "B205",
     "start"=> 1769351400,
     "end"=> 1769355000
+    ],
+    [
+    "id"=> 3,
+    "room"=> "B203",
+    "start"=> 1769580000,
+    "end"=> 1769587200
+    ],
+    [
+    "id"=> 4,
+    "room"=> "B203",
+    "start"=> 1769590800,
+    "end"=> 1769594400
+    ],
+    [
+    "id"=> 5,
+    "room"=> "B203",
+    "start"=> 1769619600,
+    "end"=> 1769623200
+    ],
+    [
+    "id"=> 6,
+    "room"=> "B203",
+    "start"=> 1769608800,
+    "end"=> 1769616000
     ]
 ];
 
@@ -90,8 +114,24 @@ if ($method === 'POST') {
  * VARAUKSEN PERUUTUS
  * DELETE /reservations/{id}
  */
-if ($method === 'DELETE' && isset($uri[1])) {
-    method_delete($uri[1],$reservations);
+if ($method === 'DELETE') {
+
+    $uri = $_SERVER['REQUEST_URI'];
+
+    // Poistetaan query string
+    $path = parse_url($uri, PHP_URL_PATH);
+
+    // Jaetaan osiin
+    $segments = explode('/', trim($path, '/'));
+
+    // Odotetaan: reservations/index.php/{id}
+    $id = end($segments);
+
+    if (!ctype_digit($id)) {
+    respond(['error' => 'Invalid reservation id'], 400);
+    }
+
+    method_delete($id,$reservations);
 }
 
 respond(['error' => 'Method not allowed'], 405);
