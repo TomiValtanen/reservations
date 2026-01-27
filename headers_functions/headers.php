@@ -10,11 +10,5 @@ header('Content-Type: application/json');
 if (!in_array($method, $allowedMethods, true)) {
     
     header('Allow: ' . implode(', ', $allowedMethods));
-    http_response_code(405);
-
-    echo json_encode([
-        'error' => 'Method not allowed'
-    ]);
-
-    exit;
+    respond(['error' => 'Method not allowed'],405);
 }
