@@ -10,7 +10,7 @@ Kokoushuone varausrajapinta:
 
 **GET** Huoneen varausten katsominen
 
-**POST** Varauksen poistaminen
+**DELETE** Varauksen poistaminen
 
 ## Headers:
 
