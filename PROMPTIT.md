@@ -7156,25 +7156,3 @@ Mutta tässä kohtaa:
 **hyvin tehty analyysi ja oikea johtopäätös** 👏
 
 
-----
-
-### ***Minun kysymys:***
-
-### ***Tekoälyn vastaus:***
-
-----
-
-### ***Minun kysymys:***
-
-### ***Tekoälyn vastaus:***
-
-----
-
-### ***Minun kysymys:***
-
-### ***Tekoälyn vastaus:***
-
-----
-
-
-
