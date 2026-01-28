@@ -1,7 +1,7 @@
 <?php
-require ("header_functions/headers.php");
 require ("functions/helper_functions.php");
 require ("http_functions/http_methods.php");
+require ("header_functions/headers.php");
 
 /**
  * Kokoushuoneiden varaus API
