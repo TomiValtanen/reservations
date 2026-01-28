@@ -4,6 +4,7 @@
 
 - Tekoäly tuotti hyvin juuri sellaisen koodin mitä sieltä pyydettiin.
 - Neuvoi ja antoi tarvittaessa esimerkkejä millä tavoin voidaan asioita tehdä.
+- Osoitti myös mitkä ovat hyväksyttäviä arvoja ja mitkä eivät ja mistä arvoista tulee virheitä.(esim. kellon ajat) 
 - Huomautti asioista ja millä tavoin niitä voitaisiin parantaa.
 - Pystyi käymään keskustelua rakenteesta ja toimintamalleista sekä ideoiden pallotteleminen oli hyvää. Sai sillä tavoin itse vaan asian tuotua esille ja vähän toisia mietteitä siihen tueksi.
 - Otti huomioon erilaiset rajaukset mitä asetettiin.
@@ -26,3 +27,4 @@
 
 
 ---
+
