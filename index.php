@@ -102,12 +102,18 @@ if ($method === 'POST') {
     check_string($input['start_time'],"start_time");
     check_string($input['end_time'],"end_time");
 
-    validate_format($input["date"],"Y-m-d","Invalid date format, expected Y-m-d");
-    validate_format($input["start_time"],"H:i","Invalid time format, expected H:i");
-    validate_format($input["end_time"],"H:i","Invalid time format, expected H:i");
+    $formatted_date=validate_format($input["date"],"Y-m-d","Invalid date format, expected Y-m-d");
+    $formatted_start_time=validate_format($input["start_time"],"H:i","Invalid time format, expected H:i");
+    $formatted_end_time=validate_format($input["end_time"],"H:i","Invalid time format, expected H:i");
+
+    $formatted_data = new stdClass();
+    $formatted_data->room=$input['room'];
+    $formatted_data->date= $formatted_date;
+    $formatted_data->start_time=$formatted_start_time;
+    $formatted_data->end_time=$formatted_end_time;
 
 
-    method_post($input,$reservations);
+    method_post($formatted_data ,$reservations);
 }
 
 /**

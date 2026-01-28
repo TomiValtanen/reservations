@@ -15,6 +15,9 @@ function overlaps($start1, $end1, $start2, $end2): bool {
     return $start1 < $end2 && $end1 > $start2;
 }
 
+/**
+ * Tarkistaa onko kyseessä string ja onko se tyhjä ""
+ */
 function check_string($input,$field_name){
     $string_format= is_string($input);
 
@@ -36,8 +39,9 @@ function check_string($input,$field_name){
  * @param string $value tarkistettava arvo
  * @param string $format päivämäärälle Y-m-d / ajalle H:i
  * @param string $errorMessage Haluttu virheviesti
+ * @return string Palauttaa oikeassa muodossa päivämäärän / ajan
  */
-function validate_format(string $value, string $format, string $errorMessage): void
+function validate_format(string $value, string $format, string $errorMessage)
 {
     $dt = DateTime::createFromFormat($format, $value);
     $errors = DateTime::getLastErrors();
@@ -46,4 +50,7 @@ function validate_format(string $value, string $format, string $errorMessage): v
         respond(['error' => $errorMessage], 400);
     }
 
+    return $dt->format($format);
+
 }
+
